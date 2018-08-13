@@ -1,0 +1,2 @@
+# Add your API key below and then copy this file to 'api_key.rb'.
+API_KEY = "put your api key here"
