@@ -12,20 +12,27 @@ require "rest-client"
 require "json"
 require_relative "api_key"
 
-BASE_URL = "https://www.wanikani.com/api/user/#{API_KEY}"
+BASE_URL = "https://api.wanikani.com/v2"
 DEBUG = false
 
-puts "BASE_URL = #{BASE_URL}" if DEBUG
+if DEBUG
+  puts "BASE_URL = #{BASE_URL}"
+  puts "API_KEY = #{API_KEY}"
+  puts
+end
 
-response = RestClient.get("#{BASE_URL}/study-queue")
+response = RestClient.get("#{BASE_URL}/user",
+                          {:Authorization => "Bearer #{API_KEY}"})
 data = JSON.parse(response)
 
-puts "response = #{response}" if DEBUG
+if DEBUG
+  puts "response = #{response}"
+  puts
+end
 
-puts "#{data['user_information']['username']}"
-puts "Level: #{data['user_information']['level']}"
-puts "Reviews due: #{data['requested_information']['reviews_available']}"
-puts "Reviews due next hour: #{data['requested_information']['reviews_available_next_hour']}"
-puts "Lessons available: #{data['requested_information']['lessons_available']}"
-
-
+puts "Username: #{data['data']['username']}"
+puts "Level: #{data['data']['level']}"
+puts "Subscription active: #{data['data']['subscription']['active']}"
+if data['data']['subscription']['active'] == true
+  puts "Subscription type: #{data['data']['subscription']['type']}"
+end
